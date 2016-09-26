@@ -1,19 +1,26 @@
 //your code here
+import java.util.*;
+ArrayList<Particle> a = new ArrayList<Particle>();
 void setup()
 {
-	//your code here
+	size(800, 800);
+	for (int i = 0; i<200; i++)
+	{
+		a.add(new NormalParticle());
+	}
 }
 void draw()
 {
 	//your code here
 }
-class NormalParticle
-{
-	//your code here
-}
+
 interface Particle
 {
-	//your code here
+	public void show();
+}
+class NormalParticle implements Particle
+{
+
 }
 class OddballParticle //uses an interface
 {
