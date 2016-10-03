@@ -4,30 +4,37 @@ int x, y;
 void setup()
 {
 	size(800, 800);
-	for (int i = 0; i<75; i++)
+	for (int i = 0; i<50; i++)
 	{
 		a.add(new NormalParticle());
 	}
 	
-	for (int i = 0; i<150; i++){
+	for (int i = 0; i<250; i++){
 		a.add(new JumboParticle());
 	}
 }
 void draw()
 {
 	background(0);
-	for (int i = 0; i<a.size(); i++)
-	{
-		a.get(i).bounce();
-		a.get(i).move();
-		
-		a.get(i).show();
+	if(frameCount>1){
+		for (int i = 0; i<a.size(); i++)
+		{
+			a.get(i).bounce();
+			a.get(i).move();
+			a.get(i).show();
+		}
 	}
 	stroke(255);
 	strokeWeight(2);
 	line (390, 400, 410, 400);
 	line (400, 390, 400, 410);
 	noStroke();
+	
+	if(frameCount<=255){
+	//beginning background
+	fill(0, 0, 0, 255*pow(0.8, ((float)frameCount+1)/45));
+	rect(0, 0, 800, 800);
+	}
 }
 
 interface Particle
@@ -42,13 +49,13 @@ class NormalParticle implements Particle
 	double x, y, speed, angle, size;
 	NormalParticle()
 	{
-		this.x = 400;
+		this.x = Math.random()*800;
 		//(Math.random()*500)+150;
-		this.y = 400;
+		this.y = Math.random()*800;
 		this.size = 20;
 		//(Math.random()*500)+150;
 		this.angle = Math.random()*TWO_PI;
-		speed = (Math.random()*2+1);
+		speed = (Math.random()*2-1);
 	}
 	public void show()
 	{
@@ -60,7 +67,7 @@ class NormalParticle implements Particle
 			//this.angle = PI-this.angle;
 			this.x = 400;
 			this.y = 400;
-			this.speed = Math.random()*8;
+			this.speed = Math.random()-1;
 			this.size = 20;
 			this.angle = Math.random()*TWO_PI;
 		}
@@ -114,9 +121,7 @@ class JumboParticle extends NormalParticle	//uses inheritance
 	public void move()
 	{
 		float distance  = sqrt(pow((float)this.x-400, 2)+pow((float)this.y-400, 2));
-
 		this.size = distance/40;
-		if (distance == 0) println(this.size);
 		this.x+=(Math.cos(this.angle)*this.speed);
 		this.y+=(Math.sin(this.angle)*this.speed);
 		this.speed=this.speed*1.01;
