@@ -1,6 +1,7 @@
 
 ArrayList<Particle> a = new ArrayList<Particle>();
-int x, y;
+float[] centerCoords = {400, 400};
+float[] dCenter = {0, 0};
 void setup()
 {
 	size(800, 800);
@@ -12,28 +13,42 @@ void setup()
 	for (int i = 0; i<250; i++){
 		a.add(new JumboParticle());
 	}
+	//noCursor();
 }
 void draw()
 {
+	translate(centerCoords[0], centerCoords[1]);
+
+	if (centerCoords[0]>300 && centerCoords[0]<500)
+		centerCoords[0] += (mouseX-centerCoords[0])*0.01;
+	if (centerCoords[1]>300 && centerCoords[1]<500)
+		centerCoords[1] += (mouseY-centerCoords[1])*0.01;
 	background(0);
-	if(frameCount>1){
+	if (frameCount>1)
+	{
 		for (int i = 0; i<a.size(); i++)
 		{
 			a.get(i).bounce();
 			a.get(i).move();
 			a.get(i).show();
 		}
+
 	}
+	fill(255);
+	rect(0, 0, 50, 50);
+	translate(400-centerCoords[0], 400-centerCoords[1]);
+	
 	stroke(255);
 	strokeWeight(2);
-	line (390, 400, 410, 400);
-	line (400, 390, 400, 410);
+	line (-10, 0, 10, 0);
+	line (0, -10, 0, 10);
+
 	noStroke();
-	
+
 	if(frameCount<=255){
-	//beginning background
-	fill(0, 0, 0, 255*pow(0.8, ((float)frameCount+1)/45));
-	rect(0, 0, 800, 800);
+		//beginning background
+		fill(0, 0, 0, 255*pow(0.8, ((float)frameCount+1)/45));
+		rect(-400, -400, 800, 800);
 	}
 }
 
@@ -44,16 +59,15 @@ interface Particle
 	public void bounce();
 }
 
+
 class NormalParticle implements Particle
 {
 	double x, y, speed, angle, size;
 	NormalParticle()
 	{
-		this.x = Math.random()*800;
-		//(Math.random()*500)+150;
-		this.y = Math.random()*800;
-		this.size = 20;
-		//(Math.random()*500)+150;
+		this.x = Math.random()*800-400;
+		this.y = Math.random()*800-400;
+		this.size = 0;
 		this.angle = Math.random()*TWO_PI;
 		speed = (Math.random()*2-1);
 	}
@@ -63,20 +77,17 @@ class NormalParticle implements Particle
 		ellipse((float)this.x, (float)this.y, (float)this.size, (float)this.size);
 	}
 	public void bounce(){
-		if (this.x<-200 || this.x>1000 || this.y<-200 || this.y>1000){
-			//this.angle = PI-this.angle;
-			this.x = 400;
-			this.y = 400;
+		if (this.x<-600 || this.x>600 || this.y<-600 || this.y>600){
+			this.x = 0;
+			this.y = 0;
 			this.speed = Math.random()-1;
 			this.size = 20;
 			this.angle = Math.random()*TWO_PI;
 		}
-		//if (this.y<0 || this.y>800)this.angle = -1*this.angle;
-
 	}
 	public void move()
 	{
-		float distance  = sqrt(pow((float)this.x-400, 2)+pow((float)this.y-400, 2));
+		float distance  = sqrt(pow((float)this.x, 2)+pow((float)this.y, 2));
 		this.size = distance/8;
 		this.x+=(Math.cos(this.angle)*this.speed);
 		this.y+=(Math.sin(this.angle)*this.speed);
@@ -88,8 +99,6 @@ class OddballParticle  implements Particle 	//uses an interface
 	double x, y, speed, angle;
 	OddballParticle()
 	{
-		this.x = Math.random()*150;
-		this.y = Math.random()*800;
 		this.angle = Math.random()*TWO_PI;
 		speed = Math.random()*8;
 
@@ -109,10 +118,6 @@ class OddballParticle  implements Particle 	//uses an interface
 
 class JumboParticle extends NormalParticle	//uses inheritance
 {
-	JumboParticle()
-	{
-		this.size = 5;
-	}
 	public void show()
 	{
 		fill(255);
@@ -120,14 +125,10 @@ class JumboParticle extends NormalParticle	//uses inheritance
 	}
 	public void move()
 	{
-		float distance  = sqrt(pow((float)this.x-400, 2)+pow((float)this.y-400, 2));
+		float distance  = sqrt(pow((float)this.x, 2)+pow((float)this.y, 2));
 		this.size = distance/40;
 		this.x+=(Math.cos(this.angle)*this.speed);
 		this.y+=(Math.sin(this.angle)*this.speed);
 		this.speed=this.speed*1.01;
 	}
-}
-
-void mousePressed(){
-	redraw();
 }
