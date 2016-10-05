@@ -2,27 +2,25 @@
 ArrayList<Particle> a = new ArrayList<Particle>();
 float[] centerCoords = {400, 400};
 float[] dCenter = {0, 0};
+int oldMX, oldMY;
 void setup()
 {
+	oldMX = oldMY = 400;
 	size(800, 800);
 	for (int i = 0; i<50; i++)
-	{
 		a.add(new NormalParticle());
-	}
 	
-	for (int i = 0; i<250; i++){
+	for (int i = 0; i<250; i++)
 		a.add(new JumboParticle());
-	}
 	//noCursor();
 }
 void draw()
 {
+	changeCenter();
 	translate(centerCoords[0], centerCoords[1]);
-
-	if (centerCoords[0]>300 && centerCoords[0]<500)
-		centerCoords[0] += (mouseX-centerCoords[0])*0.01;
-	if (centerCoords[1]>300 && centerCoords[1]<500)
-		centerCoords[1] += (mouseY-centerCoords[1])*0.01;
+		centerCoords[0] = 400+dCenter[0];
+		centerCoords[1] = 400+dCenter[1];
+	
 	background(0);
 	if (frameCount>1)
 	{
@@ -32,18 +30,18 @@ void draw()
 			a.get(i).move();
 			a.get(i).show();
 		}
-
 	}
 	fill(255);
-	rect(0, 0, 50, 50);
-	translate(400-centerCoords[0], 400-centerCoords[1]);
+	ellipse(0, 0, 50, 50);
 	
+	translate(400-centerCoords[0], 400-centerCoords[1]);
 	stroke(255);
 	strokeWeight(2);
 	line (-10, 0, 10, 0);
 	line (0, -10, 0, 10);
 
 	noStroke();
+
 
 	if(frameCount<=255){
 		//beginning background
@@ -58,8 +56,6 @@ interface Particle
 	public void move();
 	public void bounce();
 }
-
-
 class NormalParticle implements Particle
 {
 	double x, y, speed, angle, size;
@@ -131,4 +127,20 @@ class JumboParticle extends NormalParticle	//uses inheritance
 		this.y+=(Math.sin(this.angle)*this.speed);
 		this.speed=this.speed*1.01;
 	}
+}
+public void changeCenter()
+{
+	if(Math.abs(oldMX-mouseX)>15 || Math.abs(oldMY-mouseY)>15)
+	{
+		dCenter[0] = mouseX-2*oldMX;
+		dCenter[1] = mouseY-2*oldMY;
+		oldMX=mouseX;
+		oldMY=mouseY;
+	
+	}
+	else{ //easing to center
+		dCenter[0] = dCenter[0]*0.98;
+		dCenter[1] = dCenter[1]*0.98;
+	}
+
 }
