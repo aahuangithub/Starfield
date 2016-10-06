@@ -2,10 +2,9 @@
 ArrayList<Particle> a = new ArrayList<Particle>();
 float[] centerCoords = {400, 400};
 float[] dCenter = {0, 0};
-int oldMX, oldMY;
+boolean willMove = true;
 void setup()
 {
-	oldMX = oldMY = 400;
 	size(800, 800);
 	for (int i = 0; i<50; i++)
 		a.add(new NormalParticle());
@@ -13,6 +12,7 @@ void setup()
 	for (int i = 0; i<250; i++)
 		a.add(new JumboParticle());
 	//noCursor();
+
 }
 void draw()
 {
@@ -130,17 +130,23 @@ class JumboParticle extends NormalParticle	//uses inheritance
 }
 public void changeCenter()
 {
-	if(Math.abs(oldMX-mouseX)>15 || Math.abs(oldMY-mouseY)>15)
+
+	if(mouseV && (mouseX<100 || mouseX>700 || mouseY<100 || mouseY>700) && )
 	{
-		dCenter[0] = mouseX-2*oldMX;
-		dCenter[1] = mouseY-2*oldMY;
-		oldMX=mouseX;
-		oldMY=mouseY;
-	
+		dCenter[0] += 2;
+		dCenter[1] += 2;
+		//make the difference get smaller and smaller  but added onto the dCenter
 	}
-	else{ //easing to center
+	if (willMove){ //easing to center
 		dCenter[0] = dCenter[0]*0.98;
 		dCenter[1] = dCenter[1]*0.98;
 	}
+	if (Math.sqrt(dCenter[0]*dCenter[0] + dCenter[1]*dCenter[1])>100) willMove = true;
+	// if mouseV is 0 then willMove = true;
+	else if (Math.sqrt(dCenter[0]*dCenter[0] + dCenter[1]*dCenter[1]) == 0) willMove = false;
 
+}
+
+void mousePressed(){
+//updates mouseV
 }
