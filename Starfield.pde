@@ -1,11 +1,9 @@
 
 ArrayList<Particle> a = new ArrayList<Particle>();
-float[] centerCoords = {400, 400};
-float[] dCenter = {0, 0};
-boolean willMove = true;
+boolean parallaxLeft = true;
 void setup()
 {
-	size(800, 800);
+	size(600, 500);
 	for (int i = 0; i<50; i++)
 		a.add(new NormalParticle());
 	
@@ -13,40 +11,50 @@ void setup()
 		a.add(new JumboParticle());
 	//noCursor();
 
-}
+}	
 void draw()
 {
-	changeCenter();
-	translate(centerCoords[0], centerCoords[1]);
-		centerCoords[0] = 400+dCenter[0];
-		centerCoords[1] = 400+dCenter[1];
-	
+	int ss = 150;
 	background(0);
 	if (frameCount>1)
 	{
+		translate(ss, 250);
 		for (int i = 0; i<a.size(); i++)
 		{
-			a.get(i).bounce();
+			a.get(i).bounce(ss);
 			a.get(i).move();
 			a.get(i).show();
 		}
+		//draws center cross
+		stroke(255);
+		strokeWeight(2);
+		line (-10, 0, 10, 0);
+		line (0, -10, 0, 10);
+		noStroke();
+		translate(width-2*ss, 0);
+		parallaxLeft = false;
+
+		for (int i = 0; i<a.size(); i++)
+		{
+			a.get(i).show();
+		}
+		//draws center cross
+		stroke(255);
+		strokeWeight(2);
+		line (-10, 0, 10, 0);
+		line (0, -10, 0, 10);
+		noStroke();
+		parallaxLeft = true;
 	}
-	fill(255);
-	ellipse(0, 0, 50, 50);
-	
-	translate(400-centerCoords[0], 400-centerCoords[1]);
-	stroke(255);
-	strokeWeight(2);
-	line (-10, 0, 10, 0);
-	line (0, -10, 0, 10);
 
-	noStroke();
-
-
+	translate(-1*width+ss, 0);
 	if(frameCount<=255){
 		//beginning background
 		fill(0, 0, 0, 255*pow(0.8, ((float)frameCount+1)/45));
-		rect(-400, -400, 800, 800);
+		rect(-400, -400, 1600, 800);
+		fill(255, 255, 255, 255-255*pow(0.8, ((float)frameCount+1)/45));
+		textAlign(CENTER);
+		text("CROSS\nYOUR\nEYES", 600, 0);
 	}
 }
 
@@ -54,7 +62,7 @@ interface Particle
 {
 	public void show();
 	public void move();
-	public void bounce();
+	public void bounce(int min);
 }
 class NormalParticle implements Particle
 {
@@ -69,11 +77,13 @@ class NormalParticle implements Particle
 	}
 	public void show()
 	{
+		float distance  = sqrt(pow((float)this.x, 2)+pow((float)this.y, 2));
 		fill(255, 160, 0);
-		ellipse((float)this.x, (float)this.y, (float)this.size, (float)this.size);
+		if (parallaxLeft) ellipse((float)this.x-distance/4, (float)this.y, (float)this.size, (float)this.size);
+		else ellipse((float)this.x+distance/4, (float)this.y, (float)this.size, (float)this.size);
 	}
-	public void bounce(){
-		if (this.x<-600 || this.x>600 || this.y<-600 || this.y>600){
+	public void bounce(int min){
+		if (this.x<-1*min || this.x>min || this.y<-600 || this.y>600){
 			this.x = 0;
 			this.y = 0;
 			this.speed = Math.random()-1;
@@ -92,20 +102,18 @@ class NormalParticle implements Particle
 }
 class OddballParticle  implements Particle 	//uses an interface
 {
-	double x, y, speed, angle;
+	double x, y, speed;
 	OddballParticle()
 	{
-		this.angle = Math.random()*TWO_PI;
 		speed = Math.random()*8;
-
 	}
 	public void show()
 	{
 
 	}
-	public void bounce()
+	public void bounce(int min)
 	{
-
+		this.x = Math.random();
 	}
 	public void move()
 	{
@@ -127,26 +135,4 @@ class JumboParticle extends NormalParticle	//uses inheritance
 		this.y+=(Math.sin(this.angle)*this.speed);
 		this.speed=this.speed*1.01;
 	}
-}
-public void changeCenter()
-{
-
-	if(mouseV && (mouseX<100 || mouseX>700 || mouseY<100 || mouseY>700) && )
-	{
-		dCenter[0] += 2;
-		dCenter[1] += 2;
-		//make the difference get smaller and smaller  but added onto the dCenter
-	}
-	if (willMove){ //easing to center
-		dCenter[0] = dCenter[0]*0.98;
-		dCenter[1] = dCenter[1]*0.98;
-	}
-	if (Math.sqrt(dCenter[0]*dCenter[0] + dCenter[1]*dCenter[1])>100) willMove = true;
-	// if mouseV is 0 then willMove = true;
-	else if (Math.sqrt(dCenter[0]*dCenter[0] + dCenter[1]*dCenter[1]) == 0) willMove = false;
-
-}
-
-void mousePressed(){
-//updates mouseV
 }
