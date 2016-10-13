@@ -1,7 +1,7 @@
 
 ArrayList<Particle> a = new ArrayList<Particle>();
-boolean parallaxLeft = true;
-void setup()
+public boolean parallaxLeft = true;
+public void setup()
 {
 	size(720, 500);
 	for (int i = 0; i<50; i++)
@@ -11,7 +11,7 @@ void setup()
 	for (int i = 0; i<15; i++)
 		a.add(new OddballParticle());
 }	
-void draw()
+public void draw()
 {
 	int ss = width/4;
 	background(0);
@@ -62,8 +62,8 @@ interface Particle
 }
 class NormalParticle implements Particle
 {
-	float x, y, speed, angle, size;
-	NormalParticle()
+	protected float x, y, speed, angle, size;
+	public NormalParticle()
 	{
 		this.x = (float)Math.random()*800-400;
 		this.y = (float)Math.random()*800-400;
@@ -98,11 +98,11 @@ class NormalParticle implements Particle
 }
 class OddballParticle  implements Particle 	//uses an interface
 {
-	float x, y, speed, angle;
-	color c;
-	float[] anglesX = new float[3];
-	float[] anglesY = new float[3];
-	OddballParticle()
+	private float x, y, speed, angle;
+	private color c;
+	private float[] anglesX = new float[3];
+	private float[] anglesY = new float[3];
+	public OddballParticle()
 	{
 		speed = (float)Math.random()*8;
 		this.x = (float)Math.random()*800-400;
