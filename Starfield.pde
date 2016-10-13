@@ -62,34 +62,34 @@ interface Particle
 }
 class NormalParticle implements Particle
 {
-	double x, y, speed, angle, size;
+	float x, y, speed, angle, size;
 	NormalParticle()
 	{
-		this.x = Math.random()*800-400;
-		this.y = Math.random()*800-400;
+		this.x = (float)Math.random()*800-400;
+		this.y = (float)Math.random()*800-400;
 		this.size = 0;
-		this.angle = Math.random()*TWO_PI;
-		speed = (Math.random()*2-1);
+		this.angle = (float)Math.random()*TWO_PI;
+		speed = (float)(Math.random()*2-1);
 	}
 	public void show()
 	{
-		float distance  = sqrt(pow((float)this.x, 2)+pow((float)this.y, 2));
+		float distance  = dist(this.x, 0, this.y, 0);
 		fill(255, 160, 0);
-		if (parallaxLeft) ellipse((float)this.x-distance/4, (float)this.y, (float)this.size, (float)this.size);
-		else ellipse((float)this.x+distance/4, (float)this.y, (float)this.size, (float)this.size);
+		if (parallaxLeft) ellipse(this.x-distance/4, this.y, this.size, this.size);
+		else ellipse(this.x+distance/4, this.y, this.size, this.size);
 	}
 	public void bounce(int min){
 		if (this.x<-1*min || this.x>min || this.y<-600 || this.y>600){
 			this.x = 0;
 			this.y = 0;
-			this.speed = Math.random()-1;
+			this.speed = (float)Math.random()-1;
 			this.size = 20;
-			this.angle = Math.random()*TWO_PI;
+			this.angle = (float)Math.random()*TWO_PI;
 		}
 	}
 	public void move()
 	{
-		float distance  = sqrt(pow((float)this.x, 2)+pow((float)this.y, 2));
+		float distance  = dist(this.x, 0, this.y, 0);
 		this.size = distance/8;
 		this.x+=(Math.cos(this.angle)*this.speed);
 		this.y+=(Math.sin(this.angle)*this.speed);
@@ -98,16 +98,16 @@ class NormalParticle implements Particle
 }
 class OddballParticle  implements Particle 	//uses an interface
 {
-	double x, y, speed, angle;
+	float x, y, speed, angle;
 	color c;
 	float[] anglesX = new float[3];
 	float[] anglesY = new float[3];
 	OddballParticle()
 	{
-		speed = Math.random()*8;
-		this.x = Math.random()*800-400;
-		this.y = Math.random()*800-400;
-		this.angle = Math.random()*TWO_PI;
+		speed = (float)Math.random()*8;
+		this.x = (float)Math.random()*800-400;
+		this.y = (float)Math.random()*800-400;
+		this.angle = (float)Math.random()*TWO_PI;
 		this.c = color((float)Math.random()*256, (float)Math.random()*256, (float)Math.random()*256);
 		for (int i = 0; i < anglesX.length;i++){
 			this.anglesX[i]=(float)Math.random()*23-11;
@@ -116,12 +116,12 @@ class OddballParticle  implements Particle 	//uses an interface
 	}
 	public void show()
 	{
-		float distance  = sqrt(pow((float)this.x, 2)+pow((float)this.y, 2));
+		float distance   = dist(this.x, 0, this.y, 0);
 		fill(this.c);
 		float pOffset = 0;
 		if (parallaxLeft) pOffset = distance/4;
 		else pOffset = distance/-4;
-		triangle((float)this.x+this.anglesX[0]*distance/1500+pOffset, (float)this.y+this.anglesY[0]*distance/1500+pOffset, (float)this.x+this.anglesX[1]*distance/180, (float)this.y+this.anglesY[1]*distance/40, (float)this.x+this.anglesX[2]*distance/40, (float)this.y+this.anglesY[2]*distance/40);
+		triangle(this.x+this.anglesX[0]*distance/1500+pOffset, this.y+this.anglesY[0]*distance/1500+pOffset, this.x+this.anglesX[1]*distance/180, this.y+this.anglesY[1]*distance/40, this.x+this.anglesX[2]*distance/40, this.y+this.anglesY[2]*distance/40);
 
 
 	}
@@ -130,7 +130,7 @@ class OddballParticle  implements Particle 	//uses an interface
 		if  (this.x<-1*min+30 || this.x>min-30 || this.y<-600 || this.y>600){
 			this.x = 0;
 			this.y = 0;
-			this.speed = Math.random()*8;
+			this.speed = (float)Math.random()*8;
 			if(Math.random()<0.66){
 				this.c=color(0,0,0,0);
 			}
@@ -156,9 +156,9 @@ class JumboParticle extends NormalParticle	//uses inheritance
 	public void show()
 	{
 		fill(255);
-		float distance  = sqrt(pow((float)this.x, 2)+pow((float)this.y, 2));
+		float distance  = dist(this.x, 0, this.y, 0);
 		this.size = distance/40;
-		ellipse((float)this.x, (float)this.y, (float)this.size, (float)this.size);
+		ellipse(this.x, this.y, this.size, this.size);
 	}
 	public void move()
 	{
